@@ -9,5 +9,6 @@ public class Game
     
     public Company Company { get; set; }
     public Publisher Publisher { get; set; }
-    public List<Genre> Categories { get; set; }
+    public List<Genre> Genres { get; set; }
+    public List<User> Users { get; set; }
 }
