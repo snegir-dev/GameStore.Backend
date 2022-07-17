@@ -3,6 +3,7 @@ using GameStore.Application;
 using GameStore.Application.Common.Mappings;
 using GameStore.Application.Interfaces;
 using GameStore.Persistence;
+using GameStore.WebApi.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +51,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCustomExceptionHandler();
 
 app.UseHttpsRedirection();
 
