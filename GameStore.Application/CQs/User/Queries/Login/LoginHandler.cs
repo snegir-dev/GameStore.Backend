@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using GameStore.Application.Common.Exceptions;
+using GameStore.Application.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
@@ -9,11 +10,13 @@ public class LoginHandler : IRequestHandler<LoginQuery, Domain.User>
 {
     private readonly UserManager<Domain.User> _userManager;
     private readonly SignInManager<Domain.User> _signInManager;
+    private readonly IJwtGenerator _jwtGenerator;
 
-    public LoginHandler(UserManager<Domain.User> userManager, SignInManager<Domain.User> signInManager)
+    public LoginHandler(UserManager<Domain.User> userManager, SignInManager<Domain.User> signInManager, IJwtGenerator jwtGenerator)
     {
         _userManager = userManager;
         _signInManager = signInManager;
+        _jwtGenerator = jwtGenerator;
     }
 
     public async Task<Domain.User> Handle(LoginQuery request, CancellationToken cancellationToken)
@@ -33,7 +36,7 @@ public class LoginHandler : IRequestHandler<LoginQuery, Domain.User>
             {
                 UserName = user.UserName,
                 Email = user.Email,
-                Token = "test"
+                Token = _jwtGenerator.CreateToken(user)
             };
         }
 

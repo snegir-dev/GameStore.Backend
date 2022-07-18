@@ -4,6 +4,7 @@ using GameStore.Application.Common.Mappings;
 using GameStore.Application.Interfaces;
 using GameStore.Domain;
 using GameStore.Persistence;
+using GameStore.Security;
 using GameStore.WebApi.Middleware;
 using Microsoft.AspNetCore.Identity;
 
@@ -20,6 +21,7 @@ builder.Services.AddAutoMapper(config =>
 
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddApplication();
+builder.Services.AddSecurity();
 
 builder.Services.AddIdentity<User, IdentityRole<long>>()
     .AddEntityFrameworkStores<GameStoreDbContext>();
