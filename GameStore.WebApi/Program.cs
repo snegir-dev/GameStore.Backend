@@ -21,7 +21,7 @@ builder.Services.AddAutoMapper(config =>
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddApplication();
 
-builder.Services.AddIdentity<User, IdentityRole>()
+builder.Services.AddIdentity<User, IdentityRole<long>>()
     .AddEntityFrameworkStores<GameStoreDbContext>();
 
 builder.Services.AddCors(options =>
