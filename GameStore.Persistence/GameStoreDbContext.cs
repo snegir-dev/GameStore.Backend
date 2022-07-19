@@ -1,11 +1,14 @@
 ﻿using GameStore.Application.Interfaces;
 using GameStore.Domain;
 using GameStore.Persistence.EntityTypeConfigurations;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameStore.Persistence;
 
-public class GameStoreDbContext : DbContext, IGameStoreDbContext
+public class GameStoreDbContext : IdentityDbContext<User, IdentityRole<long>, long>, 
+    IGameStoreDbContext
 {
     public DbSet<Game> Games { get; set; }
     public DbSet<Publisher> Publishers { get; set; }

@@ -2,8 +2,12 @@ using System.Reflection;
 using GameStore.Application;
 using GameStore.Application.Common.Mappings;
 using GameStore.Application.Interfaces;
+using GameStore.Domain;
 using GameStore.Persistence;
+using GameStore.Security;
 using GameStore.WebApi.Middleware;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +22,19 @@ builder.Services.AddAutoMapper(config =>
 
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddApplication();
+builder.Services.AddSecurity(builder.Configuration);
+
+builder.Services.AddIdentity<User, IdentityRole<long>>(options =>
+    {
+        options.Password.RequireDigit = false;
+        options.Password.RequireLowercase = true;
+        options.Password.RequireUppercase = false;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequiredLength = 5;
+        options.User.RequireUniqueEmail = true;
+        options.SignIn.RequireConfirmedEmail = false;
+    })
+    .AddEntityFrameworkStores<GameStoreDbContext>();
 
 builder.Services.AddCors(options =>
 {
@@ -58,8 +75,8 @@ app.UseHttpsRedirection();
 
 app.UseCors("AllowAll");
 
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 
