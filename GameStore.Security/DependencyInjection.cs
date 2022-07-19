@@ -12,20 +12,25 @@ public static class DependencyInjection
     public static IServiceCollection AddSecurity(this IServiceCollection services, 
         IConfiguration configuration)
     {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["TokenKey"]));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Key"]));
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(option =>
+            .AddJwtBearer(options =>
             {
-                option.TokenValidationParameters = new TokenValidationParameters()
+                options.SaveToken = true;
+                
+                options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = key,
                     ValidateAudience = false,
-                    ValidateIssuer = false
+                    ValidateIssuer = false,
+                    IssuerSigningKey = key,
+                    ValidIssuer = configuration["JWT:Issuer"],
+                    ValidAudience = configuration["JWT:Audience"]
                 };
             });
-
+        
         services.AddScoped<IJwtGenerator, JwtGenerator>();
+
         return services;
     }
 }

@@ -7,6 +7,7 @@ using GameStore.Persistence;
 using GameStore.Security;
 using GameStore.WebApi.Middleware;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 

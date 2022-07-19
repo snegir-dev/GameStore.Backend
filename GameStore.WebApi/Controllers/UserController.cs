@@ -22,6 +22,7 @@ public class UserController : BaseController
         return await Mediator.Send(command);
     }
     
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [HttpGet]
     public Task<ActionResult<bool>> IsReg()
     {
