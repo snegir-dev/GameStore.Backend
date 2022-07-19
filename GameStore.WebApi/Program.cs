@@ -21,9 +21,18 @@ builder.Services.AddAutoMapper(config =>
 
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddApplication();
-builder.Services.AddSecurity();
+builder.Services.AddSecurity(builder.Configuration);
 
-builder.Services.AddIdentity<User, IdentityRole<long>>()
+builder.Services.AddIdentity<User, IdentityRole<long>>(options =>
+    {
+        options.Password.RequireDigit = false;
+        options.Password.RequireLowercase = true;
+        options.Password.RequireUppercase = false;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequiredLength = 5;
+        options.User.RequireUniqueEmail = true;
+        options.SignIn.RequireConfirmedEmail = false;
+    })
     .AddEntityFrameworkStores<GameStoreDbContext>();
 
 builder.Services.AddCors(options =>
