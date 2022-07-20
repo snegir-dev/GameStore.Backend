@@ -7,77 +7,98 @@ using GameStore.Persistence;
 using GameStore.Security;
 using GameStore.WebApi.Middleware;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.OpenApi.Models;
+using NLog;
+using NLog.Web;
 
-var builder = WebApplication.CreateBuilder(args);
+var logger = LogManager.Setup().LoadConfigurationFromFile("NLog.config", false)
+    .GetCurrentClassLogger();
+logger.Debug("init main");
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddAutoMapper(config =>
+try
 {
-    config.AddProfile(new AssemblyMappingProfile(Assembly.GetExecutingAssembly()));
-    config.AddProfile(new AssemblyMappingProfile(typeof(IGameStoreDbContext).Assembly));
-});
+    var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddPersistence(builder.Configuration);
-builder.Services.AddApplication();
-builder.Services.AddSecurity(builder.Configuration);
-
-builder.Services.AddIdentity<User, IdentityRole<long>>(options =>
+    builder.Services.AddControllers();
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
+    builder.Services.AddAutoMapper(config =>
     {
-        options.Password.RequireDigit = false;
-        options.Password.RequireLowercase = true;
-        options.Password.RequireUppercase = false;
-        options.Password.RequireNonAlphanumeric = false;
-        options.Password.RequiredLength = 5;
-        options.User.RequireUniqueEmail = true;
-        options.SignIn.RequireConfirmedEmail = false;
-    })
-    .AddEntityFrameworkStores<GameStoreDbContext>();
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", policy =>
-    {
-        policy.AllowAnyHeader();
-        policy.AllowAnyMethod();
-        policy.AllowAnyOrigin();
+        config.AddProfile(new AssemblyMappingProfile(Assembly.GetExecutingAssembly()));
+        config.AddProfile(new AssemblyMappingProfile(typeof(IGameStoreDbContext).Assembly));
     });
-});
 
-var app = builder.Build();
+    builder.Services.AddPersistence(builder.Configuration);
+    builder.Services.AddApplication();
+    
+    builder.Services.AddSecurity(builder.Configuration);
 
-using (var scope = app.Services.CreateScope())
-{
-    var serviceProvider = scope.ServiceProvider;
-    try
+    builder.Services.AddIdentity<User, IdentityRole<long>>(options =>
+        {
+            options.Password.RequireDigit = false;
+            options.Password.RequireLowercase = true;
+            options.Password.RequireUppercase = false;
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequiredLength = 5;
+            options.User.RequireUniqueEmail = true;
+            options.SignIn.RequireConfirmedEmail = false;
+        })
+        .AddEntityFrameworkStores<GameStoreDbContext>();
+
+    builder.Services.AddCors(options =>
     {
-        var context = serviceProvider.GetRequiredService<GameStoreDbContext>();
-        DbInitializer.Initialize(context);
-    }
-    catch (Exception e)
+        options.AddPolicy("AllowAll", policy =>
+        {
+            policy.AllowAnyHeader();
+            policy.AllowAnyMethod();
+            policy.AllowAnyOrigin();
+        });
+    });
+    
+    builder.Logging.ClearProviders();
+    builder.Host.UseNLog();
+
+    var app = builder.Build();
+
+    using (var scope = app.Services.CreateScope())
     {
-        Console.WriteLine(e);
-        throw;
+        var serviceProvider = scope.ServiceProvider;
+        try
+        {
+            var context = serviceProvider.GetRequiredService<GameStoreDbContext>();
+            DbInitializer.Initialize(context);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
-}
+    
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
 
-if (app.Environment.IsDevelopment())
+    app.UseCustomExceptionHandler();
+
+    app.UseHttpsRedirection();
+
+    app.UseCors("AllowAll");
+
+    app.UseAuthentication();
+    app.UseAuthorization();
+
+    app.MapControllers();
+
+    app.Run();
+}
+catch (Exception e)
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    logger.Error(e, "Stopped program because of exception");
+    throw;
 }
-
-app.UseCustomExceptionHandler();
-
-app.UseHttpsRedirection();
-
-app.UseCors("AllowAll");
-
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
+finally
+{
+    LogManager.Shutdown();
+}
