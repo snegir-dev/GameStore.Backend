@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Net;
+﻿using System.Net;
 using System.Text.Json;
+using FluentValidation;
+using GameStore.Application.Common.Exceptions;
 
 namespace GameStore.WebApi.Middleware;
 
@@ -21,19 +22,28 @@ public class CustomExceptionHandlerMiddleware
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            await HandlerExceptionAsync(context, e);
         }
     }
 
-    private Task HandlerExceptionAsync(HttpContext context, Exception ex)
+    private static Task HandlerExceptionAsync(HttpContext context, Exception ex)
     {
         var statusCode = HttpStatusCode.InternalServerError;
         var result = string.Empty;
 
         switch (ex)
         {
-            
+            case ValidationException validationException:
+                statusCode = HttpStatusCode.BadRequest;
+                result = JsonSerializer.Serialize(validationException.Errors);
+                break;
+            case UserCreateException createException:
+                statusCode = HttpStatusCode.BadRequest;
+                result = JsonSerializer.Serialize(createException.Errors);
+                break;
+            case NotFoundException foundException:
+                statusCode = HttpStatusCode.NotFound;
+                break;
         }
 
         context.Response.ContentType = "application/json";

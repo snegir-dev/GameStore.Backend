@@ -4,19 +4,21 @@ namespace GameStore.Application.Common.Exceptions;
 
 public class UserCreateException : Exception
 {
-    public UserCreateException(object existingFields) 
-        : base($" Existing fields: {existingFields}")
+    public IEnumerable<IdentityError>? Errors { get; private set; }
+    
+    public UserCreateException(string message) : this(message, new List<IdentityError>())
     {
     }
     
-    public UserCreateException(string user, string description)
-        : base($"Failed to create user '{user}'. Description: {description}")
+    public UserCreateException(IList<IdentityError> errors) : this(null, errors)
     {
+        Errors = errors;
     }
 
-    public UserCreateException(IEnumerable<IdentityError> errors)
-        : base(BuildErrorMessage(errors))
+    public UserCreateException(string? message, IList<IdentityError> errors)
+        : base(message != null ? $"{message} {BuildErrorMessage(errors)}" : BuildErrorMessage(errors))
     {
+        Errors = errors;
     }
     
     private static string BuildErrorMessage(IEnumerable<IdentityError> errors) {
