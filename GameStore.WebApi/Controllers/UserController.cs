@@ -15,17 +15,10 @@ public class UserController : BaseController
     {
         return await Mediator.Send(query);
     }
-
+    
     [HttpPost("registration")]
     public async Task<ActionResult<UserDto>> Registration([FromBody] RegistrationCommand command)
     {
         return await Mediator.Send(command);
-    }
-    
-    [Authorize(AuthenticationSchemes = "Bearer")]
-    [HttpGet]
-    public Task<ActionResult<bool>> IsReg()
-    {
-        return Task.FromResult<ActionResult<bool>>(User.Identity?.IsAuthenticated);
     }
 }

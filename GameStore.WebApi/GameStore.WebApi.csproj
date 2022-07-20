@@ -10,12 +10,23 @@
     <ItemGroup>
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.7" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.7">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="NLog.Database" Version="5.0.1" />
+        <PackageReference Include="NLog.Web.AspNetCore" Version="5.1.0" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.5" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\GameStore.Persistence\GameStore.Persistence.csproj" />
       <ProjectReference Include="..\GameStore.Security\GameStore.Security.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="NLog.config" />
     </ItemGroup>
 
 </Project>
