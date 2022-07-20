@@ -29,13 +29,13 @@ public class RegistrationCommandHandler : IRequestHandler<RegistrationCommand, U
         if (await _context.Users
                 .AnyAsync(u => u.Email == request.Email, cancellationToken))
         {
-            throw new UserCreateException(new {Email = "Email already exist"});
+            throw new UserCreateException("Email already exist");
         }
 
         if (await _context.Users
                 .AnyAsync(u => u.UserName == request.UserName, cancellationToken))
         {
-            throw new UserCreateException(new {Email = "UserName already exist"});
+            throw new UserCreateException("UserName already exist");
         }
 
         var user = new Domain.User()
@@ -57,6 +57,6 @@ public class RegistrationCommandHandler : IRequestHandler<RegistrationCommand, U
             };
         }
    
-        throw new UserCreateException(result.Errors);
+        throw new UserCreateException(result.Errors.ToList());
     }
 }
