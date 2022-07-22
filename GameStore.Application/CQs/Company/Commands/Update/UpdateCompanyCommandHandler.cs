@@ -24,6 +24,8 @@ public class UpdateCompanyCommandHandler : IRequestHandler<UpdateCompanyCommand,
             throw new NotFoundException(nameof(Domain.Company), request.Id);
 
         company.Name = request.Name;
+        company.Description = request.Description;
+        company.DateFoundation = request.DateFoundation;
 
         await _context.SaveChangesAsync(cancellationToken);
 

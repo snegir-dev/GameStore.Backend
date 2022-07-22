@@ -7,5 +7,7 @@ public class CreateCompanyCommandValidator : AbstractValidator<CreateCompanyComm
     public CreateCompanyCommandValidator()
     {
         RuleFor(c => c.Name).NotEmpty().MaximumLength(255);
+        RuleFor(c => c.Description).NotEmpty().MaximumLength(600);
+        RuleFor(c => c.DateFoundation).NotEmpty();
     }
 }

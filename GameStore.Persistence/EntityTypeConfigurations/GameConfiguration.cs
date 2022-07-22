@@ -13,6 +13,7 @@ public class GameConfiguration : IEntityTypeConfiguration<Game>
         builder.Property(g => g.Name).IsRequired().HasMaxLength(255);
         builder.Property(g => g.Title).IsRequired().HasMaxLength(255);
         builder.Property(g => g.Description).IsRequired().HasMaxLength(600);
+        builder.Property(g => g.Price).IsRequired();
         builder.HasOne(g => g.Company)
             .WithMany(c => c.Games);
         builder.HasOne(g => g.Publisher)
