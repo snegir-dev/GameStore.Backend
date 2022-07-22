@@ -1,9 +1,11 @@
-﻿using AutoMapper;
+﻿using System.ComponentModel.Design;
+using AutoMapper;
 using GameStore.Application.CQs.Company.Commands.Create;
 using GameStore.Application.CQs.Company.Commands.Delete;
 using GameStore.Application.CQs.Company.Commands.Update;
 using GameStore.Application.CQs.Company.Queries;
 using GameStore.Application.CQs.Company.Queries.GetCompany;
+using GameStore.Application.CQs.Company.Queries.GetListCompany;
 using GameStore.Domain;
 using GameStore.WebApi.Models;
 using GameStore.WebApi.Models.Company;
@@ -20,6 +22,15 @@ public class CompanyController : BaseController
     public CompanyController(IMapper mapper)
     {
         _mapper = mapper;
+    }
+
+    [HttpGet]
+    public async Task<ActionResult> Get()
+    {
+        var query = new GetListCompanyQuery();
+        var companies = await Mediator.Send(query);
+        
+        return Ok(companies.Companies);
     }
 
     [HttpGet("{id:long}")]
@@ -40,7 +51,7 @@ public class CompanyController : BaseController
         var command = _mapper.Map<CreateCompanyCommand>(companyDto);
         var companyId = await Mediator.Send(command);
 
-        return Ok(companyId);
+        return Created($"api/companies", companyId);
     }
 
     [HttpPut("{id:long}")]
