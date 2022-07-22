@@ -43,6 +43,7 @@ public class CustomExceptionHandlerMiddleware
                 break;
             case NotFoundException foundException:
                 statusCode = HttpStatusCode.NotFound;
+                result = JsonSerializer.Serialize(foundException.Message);
                 break;
         }
 

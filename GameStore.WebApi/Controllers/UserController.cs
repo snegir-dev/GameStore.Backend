@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GameStore.WebApi.Controllers;
 
+[Route("api/user")]
 public class UserController : BaseController
 {
     [HttpPost("login")]
