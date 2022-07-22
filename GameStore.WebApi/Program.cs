@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Text.Json.Serialization;
 using GameStore.Application;
 using GameStore.Application.Common.Mappings;
 using GameStore.Application.Interfaces;
@@ -18,7 +19,8 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-    builder.Services.AddControllers();
+    builder.Services.AddControllers()
+        .AddNewtonsoftJson();
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
     builder.Services.AddAutoMapper(config =>
@@ -53,6 +55,9 @@ try
             policy.AllowAnyOrigin();
         });
     });
+    
+    builder.Services.AddControllers().AddJsonOptions(x =>
+        x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
     
     builder.Logging.ClearProviders();
     builder.Host.UseNLog();
