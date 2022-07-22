@@ -8,10 +8,13 @@ namespace GameStore.WebApi.Middleware;
 public class CustomExceptionHandlerMiddleware
 {
     private readonly RequestDelegate _next;
+    private readonly ILogger<CustomExceptionHandlerMiddleware> _logger;
 
-    public CustomExceptionHandlerMiddleware(RequestDelegate next)
+    public CustomExceptionHandlerMiddleware(RequestDelegate next, 
+        ILogger<CustomExceptionHandlerMiddleware> logger)
     {
         _next = next;
+        _logger = logger;
     }
 
     public async Task Invoke(HttpContext context)
@@ -22,11 +25,12 @@ public class CustomExceptionHandlerMiddleware
         }
         catch (Exception e)
         {
+            _logger.LogError(e, "Error - {E}", e);
             await HandlerExceptionAsync(context, e);
         }
     }
 
-    private static Task HandlerExceptionAsync(HttpContext context, Exception ex)
+    private Task HandlerExceptionAsync(HttpContext context, Exception ex)
     {
         var statusCode = HttpStatusCode.InternalServerError;
         var result = string.Empty;

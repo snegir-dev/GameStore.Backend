@@ -13,7 +13,7 @@ using NLog.Web;
 
 var logger = LogManager.Setup().LoadConfigurationFromFile("NLog.config", false)
     .GetCurrentClassLogger();
-logger.Debug("init main");
+logger.Debug("Init main");
 
 try
 {
@@ -74,7 +74,7 @@ try
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            logger.Error(e, "Error - {E}", e);
             throw;
         }
     }
