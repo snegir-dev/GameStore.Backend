@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using GameStore.Application.Common.Mappings;
 using GameStore.Application.CQs.Company.Commands.Create;
+using GameStore.Application.CQs.Publisher.Commands.Create;
 
 namespace GameStore.WebApi.Models.Company;
 
-public class CreateCompanyDto : IMapWith<CreateCompanyCommand>
+public class CreateCompanyDto : IMapWith<CreatePublisherCommand>
 {
     public string Name { get; set; }
     public string Description { get; set; }
@@ -12,7 +13,7 @@ public class CreateCompanyDto : IMapWith<CreateCompanyCommand>
 
     public void Mapping(Profile profile)
     {
-        profile.CreateMap<CreateCompanyDto, CreateCompanyCommand>()
+        profile.CreateMap<CreateCompanyDto, CreatePublisherCommand>()
             .ForMember(c => c.Name,
                 o =>
                     o.MapFrom(c => c.Name))
