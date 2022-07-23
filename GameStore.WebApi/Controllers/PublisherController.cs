@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using GameStore.Application.CQs.Publisher.Commands;
 using GameStore.Application.CQs.Publisher.Commands.Create;
+using GameStore.Application.CQs.Publisher.Commands.Update;
 using GameStore.WebApi.Models.Company;
+using GameStore.WebApi.Models.Publisher;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GameStore.WebApi.Controllers;
@@ -17,11 +19,21 @@ public class PublisherController : BaseController
     }
 
     [HttpPost]
-    public async Task<ActionResult> Create([FromBody] CreateCompanyDto company)
+    public async Task<ActionResult<long>> Create([FromBody] CreateCompanyDto company)
     {
         var command = _mapper.Map<CreatePublisherCommand>(company);
         var companyId = await Mediator.Send(command);
 
         return Created("api/publishers", companyId);
+    }
+
+    [HttpPut("{id:long}")]
+    public async Task<ActionResult> Update(long id, [FromBody] UpdatePublisherDto publisher)
+    {
+        var command = _mapper.Map<UpdatePublisherCommand>(publisher);
+        command.Id = id;
+        await Mediator.Send(command);
+        
+        return NoContent();
     }
 }
