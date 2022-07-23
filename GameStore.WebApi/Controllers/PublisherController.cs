@@ -2,6 +2,7 @@
 using GameStore.Application.CQs.Publisher.Commands.Create;
 using GameStore.Application.CQs.Publisher.Commands.Delete;
 using GameStore.Application.CQs.Publisher.Commands.Update;
+using GameStore.Application.CQs.Publisher.Queries.GetPublisher;
 using GameStore.WebApi.Models.Company;
 using GameStore.WebApi.Models.Publisher;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,18 @@ public class PublisherController : BaseController
     public PublisherController(IMapper mapper)
     {
         _mapper = mapper;
+    }
+
+    [HttpGet("{id:long}")]
+    public async Task<ActionResult<PublisherVm>> Get(long id)
+    {
+        var query = new GetPublisherQuery()
+        {
+            Id = id
+        };
+        var vm = await Mediator.Send(query);
+        
+        return Ok(vm);
     }
 
     [HttpPost]
