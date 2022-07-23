@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using GameStore.Application.CQs.Publisher.Commands;
 using GameStore.Application.CQs.Publisher.Commands.Create;
+using GameStore.Application.CQs.Publisher.Commands.Delete;
 using GameStore.Application.CQs.Publisher.Commands.Update;
 using GameStore.WebApi.Models.Company;
 using GameStore.WebApi.Models.Publisher;
@@ -32,6 +32,18 @@ public class PublisherController : BaseController
     {
         var command = _mapper.Map<UpdatePublisherCommand>(publisher);
         command.Id = id;
+        await Mediator.Send(command);
+        
+        return NoContent();
+    }
+
+    [HttpDelete("{id:long}")]
+    public async Task<ActionResult> Delete(long id)
+    {
+        var command = new DeletePublisherCommand()
+        {
+            Id = id
+        };
         await Mediator.Send(command);
         
         return NoContent();
