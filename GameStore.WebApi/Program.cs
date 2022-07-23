@@ -1,13 +1,16 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
 using GameStore.Application;
+using GameStore.Application.Common.Converters;
 using GameStore.Application.Common.Mappings;
 using GameStore.Application.Interfaces;
 using GameStore.Domain;
 using GameStore.Persistence;
 using GameStore.Security;
 using GameStore.WebApi.Middleware;
+using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
 using NLog;
 using NLog.Web;
 
@@ -56,9 +59,12 @@ try
         });
     });
     
-    builder.Services.AddControllers().AddJsonOptions(x =>
-        x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
-    
+    builder.Services.AddControllers().AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+        options.SerializerSettings.Converters.Add(new DateOnlyJsonConverter());
+    });
+
     builder.Logging.ClearProviders();
     builder.Host.UseNLog();
 

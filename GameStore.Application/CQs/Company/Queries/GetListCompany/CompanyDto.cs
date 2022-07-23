@@ -7,6 +7,8 @@ public class CompanyDto : IMapWith<Domain.Company>
 {
     public long Id { get; set; }
     public string Name { get; set; }
+    public string Description { get; set; }
+    public DateOnly DateFoundation { get; set; }
 
     public void Mapping(Profile profile)
     {
@@ -16,6 +18,12 @@ public class CompanyDto : IMapWith<Domain.Company>
                     o.MapFrom(c => c.Id))
             .ForMember(c => c.Name,
                 o =>
-                    o.MapFrom(c => c.Name));
+                    o.MapFrom(c => c.Name))
+            .ForMember(c => c.Description,
+                o =>
+                    o.MapFrom(c => c.Description))
+            .ForMember(c => c.DateFoundation,
+                o =>
+                    o.MapFrom(c => c.DateFoundation));
     }
 }

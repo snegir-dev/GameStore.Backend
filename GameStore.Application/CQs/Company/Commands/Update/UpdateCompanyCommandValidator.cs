@@ -8,5 +8,7 @@ public class UpdateCompanyCommandValidator : AbstractValidator<UpdateCompanyComm
     {
         RuleFor(c => c.Id).NotEmpty();
         RuleFor(c => c.Name).NotEmpty().MaximumLength(255);
+        RuleFor(c => c.Description).NotEmpty().MaximumLength(600);
+        RuleFor(c => c.DateFoundation).NotEmpty();
     }
 }

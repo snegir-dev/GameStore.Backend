@@ -16,7 +16,9 @@ public class CreateCompanyCommandHandler : IRequestHandler<CreateCompanyCommand,
     {
         var company = new Domain.Company()
         {
-            Name = request.Name
+            Name = request.Name,
+            Description = request.Description,
+            DateFoundation = request.DateFoundation
         };
         
         await _context.Companies.AddAsync(company, cancellationToken);
