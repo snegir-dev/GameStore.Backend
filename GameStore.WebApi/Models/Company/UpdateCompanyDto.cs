@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using GameStore.Application.Common.Converters;
 using GameStore.Application.Common.Mappings;
 using GameStore.Application.CQs.Company.Commands.Update;
 using GameStore.Domain;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace GameStore.WebApi.Models.Company;
 
