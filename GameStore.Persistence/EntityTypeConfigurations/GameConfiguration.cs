@@ -22,5 +22,7 @@ public class GameConfiguration : IEntityTypeConfiguration<Game>
             .WithMany(g => g.Games);
         builder.HasMany(g => g.Users)
             .WithMany(u => u.Games);
+        builder.HasMany(g => g.Baskets)
+            .WithMany(b => b.Games);
     }
 }

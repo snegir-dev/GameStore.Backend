@@ -6,4 +6,5 @@ public class User : IdentityUser<long>
 {
     public decimal Balance { get; set; }
     public List<Game> Games { get; set; }
+    public List<Basket> Baskets { get; set; }
 }

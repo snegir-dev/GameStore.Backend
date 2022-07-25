@@ -16,5 +16,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.PasswordHash).IsRequired();
         builder.HasMany(u => u.Games)
             .WithMany(g => g.Users);
+        builder.HasMany(u => u.Baskets)
+            .WithOne(b => b.User);
     }
 }
