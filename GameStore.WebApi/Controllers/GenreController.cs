@@ -2,6 +2,7 @@
 using GameStore.Application.CQs.Genre.Commands.Create;
 using GameStore.Application.CQs.Genre.Commands.Delete;
 using GameStore.Application.CQs.Genre.Commands.Update;
+using GameStore.Application.CQs.Genre.Queries.GetGenre;
 using GameStore.WebApi.Models.Genre;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,6 +16,18 @@ public class GenreController : BaseController
     public GenreController(IMapper mapper)
     {
         _mapper = mapper;
+    }
+
+    [HttpGet("{id:long}")]
+    public async Task<ActionResult> Get(long id)
+    {
+        var query = new GetGenreQuery()
+        {
+            Id = id
+        };
+        var genre = await Mediator.Send(query);
+        
+        return Ok(genre);
     }
 
     [HttpPost]
