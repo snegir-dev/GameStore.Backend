@@ -13,6 +13,7 @@ public class GameStoreDbContext : IdentityDbContext<User, IdentityRole<long>, lo
     public DbSet<Game> Games { get; set; }
     public DbSet<Publisher> Publishers { get; set; }
     public DbSet<Company> Companies { get; set; }
+    public DbSet<Basket> Baskets { get; set; }
     public DbSet<Genre> Genres { get; set; }
 
     public GameStoreDbContext(DbContextOptions<GameStoreDbContext> options) 
