@@ -21,6 +21,7 @@ public class GetListCompanyQueryHandler : IRequestHandler<GetListCompanyQuery, G
         CancellationToken cancellationToken)
     {
         var companies = await _context.Companies
+            .Include(p => p.Games)
             .ProjectTo<CompanyDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
 
