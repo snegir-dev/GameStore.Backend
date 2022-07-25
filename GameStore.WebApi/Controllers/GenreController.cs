@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GameStore.Application.CQs.Genre.Commands.Create;
+using GameStore.Application.CQs.Genre.Commands.Update;
 using GameStore.WebApi.Models.Genre;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,5 +23,15 @@ public class GenreController : BaseController
         var genreId = await Mediator.Send(command);
         
         return Created("api/genres", genreId);
+    }
+
+    [HttpPut("{id:long}")]
+    public async Task<ActionResult> Update(long id, [FromBody] UpdateGenreDto genre)
+    {
+        var command = _mapper.Map<UpdateGenreCommand>(genre);
+        command.Id = id;
+        await Mediator.Send(command);
+        
+        return NoContent();
     }
 }

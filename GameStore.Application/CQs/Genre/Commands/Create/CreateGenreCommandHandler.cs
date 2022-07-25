@@ -18,8 +18,8 @@ public class CreateGenreCommandHandler : IRequestHandler<CreateGenreCommand, lon
         CancellationToken cancellationToken)
     {
         var isExistGenre = await _context.Genres
-            .FirstOrDefaultAsync(g => g.Name == request.Name, cancellationToken);
-        if (isExistGenre != null)
+            .AnyAsync(g => g.Name == request.Name, cancellationToken);
+        if (isExistGenre)
             throw new RecordExistsException(nameof(Domain.Genre), request.Name);
 
         var genre = new Domain.Genre()

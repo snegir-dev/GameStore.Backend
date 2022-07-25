@@ -3,7 +3,7 @@
 public class RecordExistsException : Exception
 {
     public RecordExistsException(string name, object record)
-        : base($"Record '{record}' of type '{name}' already exists")
+        : base($"Record '{record.ToString()}' of type '{name}' already exists")
     {
     }
 }
