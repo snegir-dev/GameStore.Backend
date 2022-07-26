@@ -6,7 +6,7 @@ public class Game
     public string Name { get; set; }
     public string Title { get; set; }
     public string Description { get; set; }
-    public DateTime DateRelease { get; set; }
+    public DateOnly DateRelease { get; set; }
     public decimal Price { get; set; }
     
     public Company Company { get; set; }

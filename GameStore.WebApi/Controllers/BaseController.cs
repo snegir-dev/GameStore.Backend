@@ -13,7 +13,7 @@ public abstract class BaseController : ControllerBase
     protected IMediator Mediator =>
         _mediator ?? HttpContext.RequestServices.GetService<IMediator>()!;
 
-    internal long? UserId => !User.Identity.IsAuthenticated
-        ? null
-        : Convert.ToInt64(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+    internal long? UserId => User.Identity!.IsAuthenticated
+        ? Convert.ToInt64(User.FindFirst(ClaimTypes.NameIdentifier)?.Value)
+        : null;
 }
