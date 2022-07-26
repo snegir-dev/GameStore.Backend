@@ -41,7 +41,7 @@ public class CustomExceptionHandlerMiddleware
                 statusCode = HttpStatusCode.BadRequest;
                 result = JsonSerializer.Serialize(validationException.Errors);
                 break;
-            case UserCreateException createException:
+            case RecordCreateException createException:
                 statusCode = HttpStatusCode.BadRequest;
                 result = JsonSerializer.Serialize(createException.Errors);
                 break;

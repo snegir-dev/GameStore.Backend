@@ -2,20 +2,20 @@
 
 namespace GameStore.Application.Common.Exceptions;
 
-public class UserCreateException : Exception
+public class RecordCreateException : Exception
 {
     public IEnumerable<IdentityError>? Errors { get; private set; }
     
-    public UserCreateException(string message) : this(message, new List<IdentityError>())
+    public RecordCreateException(string message) : this(message, new List<IdentityError>())
     {
     }
     
-    public UserCreateException(IList<IdentityError> errors) : this(null, errors)
+    public RecordCreateException(IList<IdentityError> errors) : this(null, errors)
     {
         Errors = errors;
     }
 
-    public UserCreateException(string? message, IList<IdentityError> errors)
+    public RecordCreateException(string? message, IList<IdentityError> errors)
         : base(message != null ? $"{message} {BuildErrorMessage(errors)}" : BuildErrorMessage(errors))
     {
         Errors = errors;
