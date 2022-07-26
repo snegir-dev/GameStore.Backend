@@ -6,7 +6,7 @@ namespace GameStore.Application.CQs.Basket.Queries.GetBasket;
 
 public class BasketVm : IMapWith<Domain.Basket>
 {
-    public Game Game { get; set; }
+    public Domain.Game Game { get; set; }
 
     public void Mapping(Profile profile)
     {
