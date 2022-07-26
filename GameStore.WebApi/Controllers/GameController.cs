@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GameStore.Application.CQs.Game.Commands.Create;
+using GameStore.Application.CQs.Game.Queries.GetListGame;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,16 @@ public class GameController : BaseController
     public GameController(IMapper mapper)
     {
         _mapper = mapper;
+    }
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<GameDto>>> Get()
+    {
+        var query = new GetListGameQuery();
+        var vm = await Mediator.Send(query);
+        
+        return Ok(vm.Games);
     }
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
