@@ -1,4 +1,5 @@
 ﻿using GameStore.Application.CQs.Role.Commands.Create;
+using GameStore.Application.CQs.Role.Commands.Delete;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GameStore.WebApi.Controllers;
@@ -12,5 +13,17 @@ public class RoleController : BaseController
         var roleId = await Mediator.Send(role);
         
         return Created("api/roles", roleId);
+    }
+
+    [HttpDelete("{id:long}")]
+    public async Task<ActionResult> Delete(long id)
+    {
+        var command = new DeleteRoleCommand()
+        {
+            Id = id
+        };
+        await Mediator.Send(command);
+        
+        return NoContent();
     }
 }
