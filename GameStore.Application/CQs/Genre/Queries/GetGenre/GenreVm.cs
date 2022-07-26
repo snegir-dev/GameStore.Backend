@@ -9,7 +9,7 @@ public class GenreVm : IMapWith<Domain.Genre>
     public long Id { get; set; }
     public string Name { get; set; }
     
-    public List<Game> Games { get; set; }
+    public List<Domain.Game> Games { get; set; }
 
     public void Mapping(Profile profile)
     {

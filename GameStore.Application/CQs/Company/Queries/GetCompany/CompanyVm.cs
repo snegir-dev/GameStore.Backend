@@ -11,7 +11,7 @@ public class CompanyVm : IMapWith<Domain.Company>
     public string Description { get; set; }
     public DateOnly DateFoundation { get; set; }
     
-    public List<Game> Games { get; set; }
+    public List<Domain.Game> Games { get; set; }
 
     public void Mapping(Profile profile)
     {
