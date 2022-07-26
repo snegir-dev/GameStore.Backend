@@ -2,6 +2,7 @@
 using GameStore.Application.CQs.Role.Commands.Create;
 using GameStore.Application.CQs.Role.Commands.Delete;
 using GameStore.Application.CQs.Role.Commands.Update;
+using GameStore.Application.CQs.Role.Queries.GetListRole;
 using GameStore.WebApi.Models.Role;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,6 +16,15 @@ public class RoleController : BaseController
     public RoleController(IMapper mapper)
     {
         _mapper = mapper;
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<RoleDto>>> Get()
+    {
+        var query = new GetListRoleQuery();
+        var vm = await Mediator.Send(query);
+        
+        return Ok(vm.Roles);
     }
 
     [HttpPost]
