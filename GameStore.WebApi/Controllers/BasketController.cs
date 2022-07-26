@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GameStore.Application.CQs.Basket.Commands.Create;
+using GameStore.Application.CQs.Basket.Commands.Update;
 using GameStore.Application.CQs.Basket.Queries.GetBasket;
 using GameStore.Application.CQs.Basket.Queries.GetListBasket;
 using GameStore.WebApi.Models.Basket;
@@ -55,5 +56,17 @@ public class BasketController : BaseController
         var basketId = await Mediator.Send(command);
         
         return Ok(basketId);
+    }
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [HttpPut("{id:long}")]
+    public async Task<ActionResult> Update(long id, [FromBody] UpdateBasketDto basket)
+    {
+        var command = _mapper.Map<UpdateBasketCommand>(basket);
+        command.Id = id;
+        command.UserId = UserId;
+        await Mediator.Send(command);
+        
+        return NoContent();
     }
 }

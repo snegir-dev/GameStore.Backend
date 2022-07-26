@@ -15,7 +15,7 @@ public class CreateBasketCommandHandler : IRequestHandler<CreateBasketCommand, l
         _context = context;
     }
 
-    public async Task<long> Handle(CreateBasketCommand request, 
+    public async Task<long> Handle(CreateBasketCommand request,
         CancellationToken cancellationToken)
     {
         var user = await _context.Users
@@ -29,7 +29,10 @@ public class CreateBasketCommandHandler : IRequestHandler<CreateBasketCommand, l
             throw new NotFoundException(nameof(Game), request.GameId);
 
         var isExistBasket = await _context.Baskets
-            .AnyAsync(b => b.Game.Id == game.Id, cancellationToken);
+            .Include(b => b.Game)
+            .Include(b => b.User)
+            .AnyAsync(b => b.Game.Id == game.Id &&
+                           b.User.Id == request.UserId, cancellationToken);
         if (isExistBasket)
             throw new RecordExistsException(nameof(Domain.Basket), $"game.Id = {game.Id}");
 
@@ -40,7 +43,7 @@ public class CreateBasketCommandHandler : IRequestHandler<CreateBasketCommand, l
         };
         await _context.Baskets.AddAsync(basket, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
-        
+
         return basket.Id;
     }
 }
