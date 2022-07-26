@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GameStore.Application.CQs.Basket.Commands.Create;
+using GameStore.Application.CQs.Basket.Commands.Delete;
 using GameStore.Application.CQs.Basket.Commands.Update;
 using GameStore.Application.CQs.Basket.Queries.GetBasket;
 using GameStore.Application.CQs.Basket.Queries.GetListBasket;
@@ -65,6 +66,20 @@ public class BasketController : BaseController
         var command = _mapper.Map<UpdateBasketCommand>(basket);
         command.Id = id;
         command.UserId = UserId;
+        await Mediator.Send(command);
+        
+        return NoContent();
+    }
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [HttpDelete("{id:long}")]
+    public async Task<ActionResult> Delete(long id)
+    {
+        var command = new DeleteBasketCommand()
+        {
+            Id = id,
+            UserId = UserId
+        };
         await Mediator.Send(command);
         
         return NoContent();
