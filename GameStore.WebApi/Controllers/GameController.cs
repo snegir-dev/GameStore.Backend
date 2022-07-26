@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using GameStore.Application.CQs.Game.Commands.Create;
+using GameStore.Application.CQs.Game.Commands.Update;
 using GameStore.Application.CQs.Game.Queries.GetGame;
 using GameStore.Application.CQs.Game.Queries.GetListGame;
+using GameStore.WebApi.Models.Game;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -45,5 +47,15 @@ public class GameController : BaseController
         var gameId = await Mediator.Send(game);
         
         return Ok(gameId);
+    }
+
+    [HttpPut("{id:long}")]
+    public async Task<ActionResult> Update(long id, [FromBody] UpdateGameDto game)
+    {
+        var command = _mapper.Map<UpdateGameCommand>(game);
+        command.Id = id;
+        await Mediator.Send(command);
+        
+        return NoContent();
     }
 }
