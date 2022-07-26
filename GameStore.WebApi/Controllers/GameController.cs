@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GameStore.Application.CQs.Game.Commands.Create;
+using GameStore.Application.CQs.Game.Queries.GetGame;
 using GameStore.Application.CQs.Game.Queries.GetListGame;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -16,8 +17,7 @@ public class GameController : BaseController
     {
         _mapper = mapper;
     }
-
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    
     [HttpGet]
     public async Task<ActionResult<IEnumerable<GameDto>>> Get()
     {
@@ -26,8 +26,19 @@ public class GameController : BaseController
         
         return Ok(vm.Games);
     }
-
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    
+    [HttpGet("{id:long}")]
+    public async Task<ActionResult<GameVm>> Get(long id)
+    {
+        var query = new GetGameQuery()
+        {
+            Id = id
+        };
+        var vm = await Mediator.Send(query);
+        
+        return Ok(vm);
+    }
+    
     [HttpPost]
     public async Task<ActionResult<long>> Create([FromBody] CreateGameCommand game)
     {

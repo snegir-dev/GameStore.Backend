@@ -27,7 +27,7 @@ public class GameDto : IMapWith<Domain.Game>
             .ForMember(g => g.DateRelease, 
                 o => 
                     o.MapFrom(g => g.DateRelease))
-            .ForMember(g => g.Title, 
+            .ForMember(g => g.Price, 
                 o => 
                     o.MapFrom(g => g.Price));
     }
