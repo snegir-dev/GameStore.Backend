@@ -25,7 +25,7 @@ public class GetListBasketQueryHandler : IRequestHandler<GetListBasketQuery, Get
             throw new NotFoundException(nameof(Domain.User), null);
 
         var baskets = await _context.Baskets
-            .Include(b => b.Games)
+            .Include(b => b.Game)
             .Include(b => b.User)
             .Where(b => b.User.Id == request.UserId.Value)
             .ProjectTo<BasketDto>(_mapper.ConfigurationProvider)

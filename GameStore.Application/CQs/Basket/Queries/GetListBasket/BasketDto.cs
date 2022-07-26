@@ -7,13 +7,13 @@ namespace GameStore.Application.CQs.Basket.Queries.GetListBasket;
 public class BasketDto : IMapWith<Domain.Basket>
 {
     public long Id { get; set; }
-    public List<Game> Games { get; set; }
+    public Game Game { get; set; }
 
     public void Mapping(Profile profile)
     {
         profile.CreateMap<Domain.Basket, BasketDto>()
-            .ForMember(b => b.Games,
+            .ForMember(b => b.Game,
                 o =>
-                    o.MapFrom(b => b.Games));
+                    o.MapFrom(b => b.Game));
     }
 }

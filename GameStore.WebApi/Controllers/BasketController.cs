@@ -1,5 +1,8 @@
-﻿using GameStore.Application.CQs.Basket.Queries.GetBasket;
+﻿using AutoMapper;
+using GameStore.Application.CQs.Basket.Commands.Create;
+using GameStore.Application.CQs.Basket.Queries.GetBasket;
 using GameStore.Application.CQs.Basket.Queries.GetListBasket;
+using GameStore.WebApi.Models.Basket;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +12,13 @@ namespace GameStore.WebApi.Controllers;
 [Route("api/baskets")]
 public class BasketController : BaseController
 {
+    private readonly IMapper _mapper;
+
+    public BasketController(IMapper mapper)
+    {
+        _mapper = mapper;
+    }
+
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet]
     public async Task<ActionResult<GetListBasketVm>> Get()
@@ -34,5 +44,16 @@ public class BasketController : BaseController
         var vm = await Mediator.Send(query);
 
         return Ok(vm);
+    }
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [HttpPost]
+    public async Task<ActionResult<long>> Create([FromBody] CreateBasketDto basket)
+    {
+        var command = _mapper.Map<CreateBasketCommand>(basket);
+        command.UserId = UserId;
+        var basketId = await Mediator.Send(command);
+        
+        return Ok(basketId);
     }
 }

@@ -25,11 +25,11 @@ public class GetBasketQueryHandler : IRequestHandler<GetBasketQuery, BasketVm>
 
         var basket = await _context.Baskets
             .Include(b => b.User)
-            .Include(b => b.Games)
+            .Include(b => b.Game)
             .ThenInclude(g => g.Genres)
-            .Include(b => b.Games)
+            .Include(b => b.Game)
             .ThenInclude(g => g.Company)
-            .Include(b => b.Games)
+            .Include(b => b.Game)
             .ThenInclude(g => g.Publisher)
             .FirstOrDefaultAsync(b => b.Id == request.Id &&
                                       b.User.Id == request.UserId.Value, cancellationToken)

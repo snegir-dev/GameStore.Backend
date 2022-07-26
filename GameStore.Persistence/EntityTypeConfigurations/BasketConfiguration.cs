@@ -12,7 +12,7 @@ public class BasketConfiguration : IEntityTypeConfiguration<Basket>
         builder.HasIndex(b => b.Id).IsUnique();
         builder.HasOne(b => b.User)
             .WithMany(u => u.Baskets);
-        builder.HasMany(b => b.Games)
+        builder.HasOne(b => b.Game)
             .WithMany(g => g.Baskets);
     }
 }
