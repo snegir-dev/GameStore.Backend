@@ -8,8 +8,11 @@ using GameStore.Domain;
 using GameStore.Persistence;
 using GameStore.Security;
 using GameStore.WebApi.Middleware;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Newtonsoft.Json;
 using NLog;
 using NLog.Web;
@@ -34,7 +37,7 @@ try
 
     builder.Services.AddPersistence(builder.Configuration);
     builder.Services.AddApplication();
-    
+
     builder.Services.AddSecurity(builder.Configuration);
 
     builder.Services.AddIdentity<User, IdentityRole<long>>(options =>
@@ -58,11 +61,18 @@ try
             policy.AllowAnyOrigin();
         });
     });
-    
-    builder.Services.AddControllers().AddNewtonsoftJson(options =>
+
+    builder.Services.AddControllers()
+        .AddNewtonsoftJson(options =>
+        {
+            options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            options.SerializerSettings.Converters.Add(new DateOnlyJsonConverter());
+        });
+
+    builder.Services.AddAuthentication(options =>
     {
-        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-        options.SerializerSettings.Converters.Add(new DateOnlyJsonConverter());
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     });
 
     builder.Logging.ClearProviders();
@@ -84,7 +94,7 @@ try
             throw;
         }
     }
-    
+
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
