@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace GameStore.WebApi.Controllers;
 
 [Route("api/baskets")]
+[Authorize]
 public class BasketController : BaseController
 {
     private readonly IMapper _mapper;
@@ -20,8 +21,7 @@ public class BasketController : BaseController
     {
         _mapper = mapper;
     }
-
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    
     [HttpGet]
     public async Task<ActionResult<GetListBasketVm>> Get()
     {
@@ -33,8 +33,7 @@ public class BasketController : BaseController
         
         return Ok(vm.Baskets);
     }
-
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    
     [HttpGet("{id:long}")]
     public async Task<ActionResult<BasketVm>> Get(long id)
     {
@@ -47,8 +46,7 @@ public class BasketController : BaseController
 
         return Ok(vm);
     }
-
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    
     [HttpPost]
     public async Task<ActionResult<long>> Create([FromBody] CreateBasketDto basket)
     {
@@ -58,8 +56,7 @@ public class BasketController : BaseController
         
         return Ok(basketId);
     }
-
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    
     [HttpPut("{id:long}")]
     public async Task<ActionResult> Update(long id, [FromBody] UpdateBasketDto basket)
     {
@@ -70,8 +67,7 @@ public class BasketController : BaseController
         
         return NoContent();
     }
-
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    
     [HttpDelete("{id:long}")]
     public async Task<ActionResult> Delete(long id)
     {
