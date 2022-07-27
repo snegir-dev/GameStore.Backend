@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GameStore.Application.CQs.User.Commands.Registration;
 
-public class RegistrationCommandHandler : IRequestHandler<RegistrationCommand, UserDto>
+public class RegistrationCommandHandler : IRequestHandler<RegistrationCommand, UserToken>
 {
     private readonly UserManager<Domain.User> _userManager;
     private readonly SignInManager<Domain.User> _signInManager;
@@ -23,7 +23,7 @@ public class RegistrationCommandHandler : IRequestHandler<RegistrationCommand, U
         _signInManager = signInManager;
     }
 
-    public async Task<UserDto> Handle(RegistrationCommand request,
+    public async Task<UserToken> Handle(RegistrationCommand request,
         CancellationToken cancellationToken)
     {
         if (await _context.Users
@@ -48,11 +48,8 @@ public class RegistrationCommandHandler : IRequestHandler<RegistrationCommand, U
 
         if (result.Succeeded)
         {
-            return new UserDto()
+            return new UserToken()
             {
-                UserName = user.UserName,
-                Email = user.Email,
-                Balance = user.Balance,
                 Token = _jwtGenerator.CreateToken(user)
             };
         }

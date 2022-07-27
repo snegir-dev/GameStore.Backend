@@ -2,7 +2,7 @@
 using GameStore.Application.Common.Mappings;
 using GameStore.Application.CQs.Role.Commands.SetRole;
 
-namespace GameStore.WebApi.Models.User;
+namespace GameStore.WebApi.Models.Role;
 
 public class SetRoleDto : IMapWith<SetRoleCommand>
 {

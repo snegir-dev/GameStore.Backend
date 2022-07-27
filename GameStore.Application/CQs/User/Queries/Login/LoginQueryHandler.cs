@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace GameStore.Application.CQs.User.Queries.Login;
 
-public class LoginQueryHandler : IRequestHandler<LoginQuery, UserDto>
+public class LoginQueryHandler : IRequestHandler<LoginQuery, UserToken>
 {
     private readonly UserManager<Domain.User> _userManager;
     private readonly SignInManager<Domain.User> _signInManager;
@@ -19,7 +19,7 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, UserDto>
         _jwtGenerator = jwtGenerator;
     }
 
-    public async Task<UserDto> Handle(LoginQuery request, CancellationToken cancellationToken)
+    public async Task<UserToken> Handle(LoginQuery request, CancellationToken cancellationToken)
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user == null)
@@ -32,10 +32,8 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, UserDto>
 
         if (result.Succeeded)
         {
-            return new UserDto()
+            return new UserToken()
             {
-                UserName = user.UserName,
-                Email = user.Email,
                 Token = _jwtGenerator.CreateToken(user)
             };
         }

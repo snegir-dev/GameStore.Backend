@@ -1,17 +1,18 @@
-﻿using System.Reflection;
-using System.Runtime.InteropServices.ComTypes;
-using AutoMapper;
+﻿using AutoMapper;
 using GameStore.Application.CQs.User;
 using GameStore.Application.CQs.User.Commands.Registration;
+using GameStore.Application.CQs.User.Commands.Update;
+using GameStore.Application.CQs.User.Queries.GetListUser;
+using GameStore.Application.CQs.User.Queries.GetUser;
 using GameStore.Application.CQs.User.Queries.Login;
-using GameStore.Domain;
 using GameStore.WebApi.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GameStore.WebApi.Controllers;
 
-[Route("api/user")]
+[Authorize(Roles = "Admin")]
+[Route("api/users")]
 public class UserController : BaseController
 {
     private readonly IMapper _mapper;
@@ -21,15 +22,49 @@ public class UserController : BaseController
         _mapper = mapper;
     }
 
-    [HttpPost("login")]
-    public async Task<ActionResult<UserDto>> LoginAsync([FromBody] LoginQuery query)
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<UserDto>>> Get()
+    {
+        var query = new GetListUserQuery();
+        var vm = await Mediator.Send(query);
+        
+        return Ok(vm.Users);
+    }
+
+    [HttpGet("{id:long}")]
+    public async Task<ActionResult<UserVm>> Get(long id)
+    {
+        var query = new GetUserQuery()
+        {
+            Id = id
+        };
+        var vm = await Mediator.Send(query);
+        
+        return Ok(vm);
+    }
+
+    [AllowAnonymous]
+    [HttpPost("authenticate")]
+    public async Task<ActionResult<UserToken>> Authenticate([FromBody] LoginQuery query)
     {
         return await Mediator.Send(query);
     }
     
-    [HttpPost("registration")]
-    public async Task<ActionResult<UserDto>> Registration([FromBody] RegistrationCommand command)
+    [AllowAnonymous]
+    [HttpPost("register")]
+    public async Task<ActionResult<UserToken>> Register([FromBody] RegistrationCommand command)
     {
         return await Mediator.Send(command);
+    }
+
+    [Authorize]
+    [HttpPut]
+    public async Task<ActionResult> Update(UpdateUserDto user)
+    {
+        var command = _mapper.Map<UpdateUserCommand>(user);
+        command.Id = UserId;
+        await Mediator.Send(command);
+        
+        return NoContent();
     }
 }
