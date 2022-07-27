@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using GameStore.Application.CQs.Role.Commands.Create;
 using GameStore.Application.CQs.Role.Commands.Delete;
+using GameStore.Application.CQs.Role.Commands.SetRole;
 using GameStore.Application.CQs.Role.Commands.Update;
 using GameStore.Application.CQs.Role.Queries.GetListRole;
 using GameStore.Application.CQs.Role.Queries.GetRole;
 using GameStore.WebApi.Models.Role;
+using GameStore.WebApi.Models.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GameStore.WebApi.Controllers;
@@ -27,7 +30,7 @@ public class RoleController : BaseController
         
         return Ok(vm.Roles);
     }
-
+    
     [HttpGet("{id:long}")]
     public async Task<ActionResult> Get(long id)
     {
@@ -46,6 +49,16 @@ public class RoleController : BaseController
         var roleId = await Mediator.Send(role);
         
         return Created("api/roles", roleId);
+    }
+    
+    [HttpPost]
+    public async Task<ActionResult> SetRole([FromBody] SetRoleDto role)
+    {
+        var command = _mapper.Map<SetRoleCommand>(role);
+        command.UserId = UserId;
+        await Mediator.Send(command);
+        
+        return NoContent();
     }
 
     [HttpPut("{id:long}")]
