@@ -6,10 +6,12 @@ using GameStore.Application.CQs.Company.Queries.GetCompany;
 using GameStore.Application.CQs.Company.Queries.GetListCompany;
 using GameStore.Domain;
 using GameStore.WebApi.Models.Company;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GameStore.WebApi.Controllers;
 
+[Authorize(Roles = "Admin")]
 [Route("api/companies")]
 public class CompanyController : BaseController
 {
@@ -20,6 +22,7 @@ public class CompanyController : BaseController
         _mapper = mapper;
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult> Get()
     {
@@ -29,6 +32,7 @@ public class CompanyController : BaseController
         return Ok(companies.Companies);
     }
 
+    [AllowAnonymous]
     [HttpGet("{id:long}")]
     public async Task<ActionResult<CompanyVm>> Get(long id)
     {

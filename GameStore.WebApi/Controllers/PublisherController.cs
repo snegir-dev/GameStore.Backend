@@ -6,10 +6,12 @@ using GameStore.Application.CQs.Publisher.Queries.GetListPublisher;
 using GameStore.Application.CQs.Publisher.Queries.GetPublisher;
 using GameStore.WebApi.Models.Company;
 using GameStore.WebApi.Models.Publisher;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GameStore.WebApi.Controllers;
 
+[Authorize(Roles = "Admin")]
 [Route("api/publishers")]
 public class PublisherController : BaseController
 {
@@ -20,6 +22,7 @@ public class PublisherController : BaseController
         _mapper = mapper;
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult> Get()
     {
@@ -29,6 +32,7 @@ public class PublisherController : BaseController
         return Ok(vm.Publishers);
     }
 
+    [AllowAnonymous]
     [HttpGet("{id:long}")]
     public async Task<ActionResult<PublisherVm>> Get(long id)
     {

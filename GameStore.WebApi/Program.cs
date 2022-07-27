@@ -87,6 +87,10 @@ try
         {
             var context = serviceProvider.GetRequiredService<GameStoreDbContext>();
             DbInitializer.Initialize(context);
+            
+            var rolesManager = scope.ServiceProvider
+                .GetRequiredService<RoleManager<IdentityRole<long>>>();
+            await RoleInitializer.InitializerAsync(rolesManager);
         }
         catch (Exception e)
         {

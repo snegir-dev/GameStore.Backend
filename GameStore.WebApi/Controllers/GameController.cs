@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GameStore.WebApi.Controllers;
 
+[Authorize(Roles = "Admin")]
 [Route("api/games")]
 public class GameController : BaseController
 {
@@ -21,6 +22,7 @@ public class GameController : BaseController
         _mapper = mapper;
     }
     
+    [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<GameDto>>> Get()
     {
@@ -30,6 +32,7 @@ public class GameController : BaseController
         return Ok(vm.Games);
     }
     
+    [AllowAnonymous]
     [HttpGet("{id:long}")]
     public async Task<ActionResult<GameVm>> Get(long id)
     {
