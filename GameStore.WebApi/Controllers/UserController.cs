@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using GameStore.Application.CQs.User;
 using GameStore.Application.CQs.User.Commands.Registration;
+using GameStore.Application.CQs.User.Commands.Update;
 using GameStore.Application.CQs.User.Queries.GetListUser;
 using GameStore.Application.CQs.User.Queries.GetUser;
 using GameStore.Application.CQs.User.Queries.Login;
+using GameStore.WebApi.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,7 +32,7 @@ public class UserController : BaseController
     }
 
     [HttpGet("{id:long}")]
-    public async Task<ActionResult> Get(long id)
+    public async Task<ActionResult<UserVm>> Get(long id)
     {
         var query = new GetUserQuery()
         {
@@ -53,5 +55,16 @@ public class UserController : BaseController
     public async Task<ActionResult<UserToken>> Register([FromBody] RegistrationCommand command)
     {
         return await Mediator.Send(command);
+    }
+
+    [Authorize]
+    [HttpPut]
+    public async Task<ActionResult> Update(UpdateUserDto user)
+    {
+        var command = _mapper.Map<UpdateUserCommand>(user);
+        command.Id = UserId;
+        await Mediator.Send(command);
+        
+        return NoContent();
     }
 }

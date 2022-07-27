@@ -6,7 +6,6 @@ using GameStore.Application.CQs.Role.Commands.Update;
 using GameStore.Application.CQs.Role.Queries.GetListRole;
 using GameStore.Application.CQs.Role.Queries.GetRole;
 using GameStore.WebApi.Models.Role;
-using GameStore.WebApi.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
