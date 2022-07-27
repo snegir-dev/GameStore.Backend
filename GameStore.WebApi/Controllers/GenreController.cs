@@ -5,10 +5,12 @@ using GameStore.Application.CQs.Genre.Commands.Update;
 using GameStore.Application.CQs.Genre.Queries.GetGenre;
 using GameStore.Application.CQs.Genre.Queries.GetListGenre;
 using GameStore.WebApi.Models.Genre;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GameStore.WebApi.Controllers;
 
+[Authorize(Roles = "Admin")]
 [Route("api/genres")]
 public class GenreController : BaseController
 {
@@ -19,6 +21,7 @@ public class GenreController : BaseController
         _mapper = mapper;
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult> Get()
     {
@@ -28,6 +31,7 @@ public class GenreController : BaseController
         return Ok(vm.Genres);
     }
 
+    [AllowAnonymous]
     [HttpGet("{id:long}")]
     public async Task<ActionResult<GenreVm>> Get(long id)
     {

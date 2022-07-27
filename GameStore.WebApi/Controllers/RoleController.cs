@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GameStore.WebApi.Controllers;
 
+[Authorize(Roles = "Admin")]
 [Route("api/roles")]
 public class RoleController : BaseController
 {
