@@ -2,7 +2,7 @@
 
 namespace GameStore.Application.CQs.User.Commands.Registration;
 
-public class RegistrationCommand : IRequest<UserToken>
+public class RegistrationCommand : IRequest<AuthenticatedResponse>
 {
     public string UserName { get; set; }
     public string Email { get; set; }

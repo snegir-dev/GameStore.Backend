@@ -14,6 +14,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.Email).IsUnicode().IsRequired();
         builder.Property(u => u.UserName).IsRequired().HasMaxLength(255);
         builder.Property(u => u.PasswordHash).IsRequired();
+        builder.Property(u => u.RefreshToken).IsRequired(false);
+        builder.Property(u => u.RefreshTokenExpiryTime).IsRequired(false);
         builder.HasMany(u => u.Games)
             .WithMany(g => g.Users);
         builder.HasMany(u => u.Baskets)

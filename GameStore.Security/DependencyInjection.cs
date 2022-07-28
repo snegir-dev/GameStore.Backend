@@ -20,12 +20,13 @@ public static class DependencyInjection
                 
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    ValidateIssuerSigningKey = true,
-                    ValidateAudience = false,
-                    ValidateIssuer = false,
-                    IssuerSigningKey = key,
+                    ValidateIssuer = true,
                     ValidIssuer = configuration["JWT:Issuer"],
-                    ValidAudience = configuration["JWT:Audience"]
+                    ValidateAudience = true,
+                    ValidAudience = configuration["JWT:Audience"],
+                    ValidateIssuerSigningKey = true,
+                    ValidateLifetime = true,
+                    IssuerSigningKey = key
                 };
             });
         

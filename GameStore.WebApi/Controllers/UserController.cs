@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GameStore.Application.CQs.User;
+using GameStore.Application.CQs.User.Commands.RefreshToken;
 using GameStore.Application.CQs.User.Commands.Registration;
 using GameStore.Application.CQs.User.Commands.Update;
 using GameStore.Application.CQs.User.Queries.GetListUser;
@@ -45,14 +46,14 @@ public class UserController : BaseController
 
     [AllowAnonymous]
     [HttpPost("authenticate")]
-    public async Task<ActionResult<UserToken>> Authenticate([FromBody] LoginQuery query)
+    public async Task<ActionResult<AuthenticatedResponse>> Authenticate([FromBody] LoginQuery query)
     {
         return await Mediator.Send(query);
     }
     
     [AllowAnonymous]
     [HttpPost("register")]
-    public async Task<ActionResult<UserToken>> Register([FromBody] RegistrationCommand command)
+    public async Task<ActionResult<AuthenticatedResponse>> Register([FromBody] RegistrationCommand command)
     {
         return await Mediator.Send(command);
     }
@@ -66,5 +67,13 @@ public class UserController : BaseController
         await Mediator.Send(command);
         
         return NoContent();
+    }
+    
+    [AllowAnonymous]
+    [HttpPost("refresh-token")]
+    public async Task<ActionResult<AuthenticatedResponse>> RefreshToken(
+        [FromBody] RefreshTokenCommand token)
+    {
+        return await Mediator.Send(token);
     }
 }
