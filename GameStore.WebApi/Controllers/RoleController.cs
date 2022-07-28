@@ -51,7 +51,7 @@ public class RoleController : BaseController
         return Created("api/roles", roleId);
     }
     
-    [HttpPost]
+    [HttpPost("set-role")]
     public async Task<ActionResult> SetRole([FromBody] SetRoleDto role)
     {
         var command = _mapper.Map<SetRoleCommand>(role);

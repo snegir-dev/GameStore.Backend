@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GameStore.Application.CQs.User.Commands.Registration;
 
-public class RegistrationCommandHandler : IRequestHandler<RegistrationCommand, UserToken>
+public class RegistrationCommandHandler : IRequestHandler<RegistrationCommand, AuthenticatedResponse>
 {
     private readonly UserManager<Domain.User> _userManager;
     private readonly SignInManager<Domain.User> _signInManager;
@@ -23,7 +23,7 @@ public class RegistrationCommandHandler : IRequestHandler<RegistrationCommand, U
         _signInManager = signInManager;
     }
 
-    public async Task<UserToken> Handle(RegistrationCommand request,
+    public async Task<AuthenticatedResponse> Handle(RegistrationCommand request,
         CancellationToken cancellationToken)
     {
         if (await _context.Users
@@ -38,19 +38,24 @@ public class RegistrationCommandHandler : IRequestHandler<RegistrationCommand, U
             throw new RecordCreateException("UserName already exist");
         }
 
+        var refreshToken = _jwtGenerator.CreateRefreshToken();
+
         var user = new Domain.User()
         {
             UserName = request.UserName,
-            Email = request.Email
+            Email = request.Email,
+            RefreshToken = refreshToken,
+            RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7)
         };
 
         var result = await _userManager.CreateAsync(user, request.Password);
 
         if (result.Succeeded)
         {
-            return new UserToken()
+            return new AuthenticatedResponse()
             {
-                Token = _jwtGenerator.CreateToken(user)
+                Token = _jwtGenerator.CreateToken(user),
+                RefreshToken = refreshToken
             };
         }
    

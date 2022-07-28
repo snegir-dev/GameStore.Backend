@@ -28,7 +28,7 @@ public class GameStoreDbContext : IdentityDbContext<User, IdentityRole<long>, lo
         modelBuilder.ApplyConfiguration(new PublisherConfiguration());
         modelBuilder.ApplyConfiguration(new GenreConfiguration());
         modelBuilder.ApplyConfiguration(new UserConfiguration());
-        
+
         base.OnModelCreating(modelBuilder);
     }
 }
