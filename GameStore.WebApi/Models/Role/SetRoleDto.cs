@@ -6,6 +6,7 @@ namespace GameStore.WebApi.Models.Role;
 
 public class SetRoleDto : IMapWith<SetRoleCommand>
 {
+    public long UserId { get; set; }
     public long RoleId { get; set; }
 
     public void Mapping(Profile profile)
@@ -13,6 +14,9 @@ public class SetRoleDto : IMapWith<SetRoleCommand>
         profile.CreateMap<SetRoleDto, SetRoleCommand>()
             .ForMember(r => r.RoleId,
                 o =>
-                    o.MapFrom(r => r.RoleId));
+                    o.MapFrom(r => r.RoleId))
+            .ForMember(r => r.UserId,
+                o =>
+                    o.MapFrom(r => r.UserId));
     }
 }
