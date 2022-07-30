@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using AutoMapper;
 using GameStore.Application.Common.Exceptions;
 using GameStore.Application.Interfaces;
 using MediatR;
@@ -11,13 +12,16 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, AuthenticatedRespon
     private readonly UserManager<Domain.User> _userManager;
     private readonly SignInManager<Domain.User> _signInManager;
     private readonly IJwtGenerator _jwtGenerator;
+    private readonly IMapper _mapper;
 
-    public LoginQueryHandler(UserManager<Domain.User> userManager, SignInManager<Domain.User> signInManager,
-        IJwtGenerator jwtGenerator)
+    public LoginQueryHandler(UserManager<Domain.User> userManager, 
+        SignInManager<Domain.User> signInManager,
+        IJwtGenerator jwtGenerator, IMapper mapper)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _jwtGenerator = jwtGenerator;
+        _mapper = mapper;
     }
 
     public async Task<AuthenticatedResponse> Handle(LoginQuery request, CancellationToken cancellationToken)
@@ -40,11 +44,10 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, AuthenticatedRespon
             
             await _userManager.UpdateAsync(user);
 
-            return new AuthenticatedResponse()
-            {
-                Token = _jwtGenerator.CreateToken(user),
-                RefreshToken = refreshToken
-            };
+            var authenticatedResponse = _mapper.Map<AuthenticatedResponse>(user);
+            authenticatedResponse.Token = _jwtGenerator.CreateToken(user);
+
+            return authenticatedResponse;
         }
 
         throw new Exception(HttpStatusCode.Unauthorized.ToString());

@@ -1,4 +1,5 @@
-﻿using GameStore.Application.Common.Exceptions;
+﻿using AutoMapper;
+using GameStore.Application.Common.Exceptions;
 using GameStore.Application.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -9,18 +10,17 @@ namespace GameStore.Application.CQs.User.Commands.Registration;
 public class RegistrationCommandHandler : IRequestHandler<RegistrationCommand, AuthenticatedResponse>
 {
     private readonly UserManager<Domain.User> _userManager;
-    private readonly SignInManager<Domain.User> _signInManager;
+    private readonly IMapper _mapper;
     private readonly IGameStoreDbContext _context;
     private readonly IJwtGenerator _jwtGenerator;
 
     public RegistrationCommandHandler(UserManager<Domain.User> userManager,
-        IJwtGenerator jwtGenerator, IGameStoreDbContext context, 
-        SignInManager<Domain.User> signInManager)
+        IJwtGenerator jwtGenerator, IGameStoreDbContext context, IMapper mapper)
     {
         _userManager = userManager;
         _jwtGenerator = jwtGenerator;
         _context = context;
-        _signInManager = signInManager;
+        _mapper = mapper;
     }
 
     public async Task<AuthenticatedResponse> Handle(RegistrationCommand request,
@@ -52,11 +52,10 @@ public class RegistrationCommandHandler : IRequestHandler<RegistrationCommand, A
 
         if (result.Succeeded)
         {
-            return new AuthenticatedResponse()
-            {
-                Token = _jwtGenerator.CreateToken(user),
-                RefreshToken = refreshToken
-            };
+            var authenticatedResponse = _mapper.Map<AuthenticatedResponse>(user);
+
+            authenticatedResponse.Token = _jwtGenerator.CreateToken(user);
+            return authenticatedResponse;
         }
    
         throw new RecordCreateException(result.Errors.ToList());
