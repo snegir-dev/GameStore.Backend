@@ -46,7 +46,7 @@ public class PublisherController : BaseController
     }
 
     [HttpPost]
-    public async Task<ActionResult<long>> Create([FromBody] CreateCompanyDto company)
+    public async Task<ActionResult<long>> Create([FromBody] CreatePublisherDto company)
     {
         var command = _mapper.Map<CreatePublisherCommand>(company);
         var companyId = await Mediator.Send(command);

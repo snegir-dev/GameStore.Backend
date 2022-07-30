@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GameStore.Application.CQs.Game.Commands.Create;
 using GameStore.Application.CQs.Game.Commands.Delete;
+using GameStore.Application.CQs.Game.Commands.Purchase;
 using GameStore.Application.CQs.Game.Commands.Update;
 using GameStore.Application.CQs.Game.Queries.GetGame;
 using GameStore.Application.CQs.Game.Queries.GetListGame;
@@ -51,6 +52,19 @@ public class GameController : BaseController
         var gameId = await Mediator.Send(game);
         
         return Created("api/games", gameId);
+    }
+
+    [HttpPost("{id:long}")]
+    public async Task<ActionResult> Purchase(long id)
+    {
+        var command = new PurchaseGameCommand()
+        {
+            GameId = id,
+            UserId = UserId
+        };
+        var gameId = await Mediator.Send(command);
+        
+        return Ok(gameId);
     }
 
     [HttpPut("{id:long}")]
