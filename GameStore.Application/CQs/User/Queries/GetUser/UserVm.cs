@@ -11,6 +11,9 @@ public class UserVm : IMapWith<Domain.User>
     public string Email { get; set; }
     public decimal Balance { get; set; }
     public string Role { get; set; }
+    
+    public List<Domain.Game> Games { get; set; }
+    public List<Domain.Basket> Baskets { get; set; }
 
     public void Mapping(Profile profile)
     {
@@ -26,6 +29,12 @@ public class UserVm : IMapWith<Domain.User>
                     o.MapFrom(u => u.Email))
             .ForMember(u => u.Balance, 
                 o => 
-                    o.MapFrom(u => u.Balance));
+                    o.MapFrom(u => u.Balance))
+            .ForMember(u => u.Baskets, 
+                o => 
+                    o.MapFrom(u => u.Baskets))
+            .ForMember(u => u.Games, 
+                o => 
+                    o.MapFrom(u => u.Games));
     }
 }
