@@ -22,6 +22,7 @@ public class CompanyController : BaseController
         _mapper = mapper;
     }
     
+    [ResponseCache(CacheProfileName = "Caching")]
     [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult> Get()
@@ -32,6 +33,7 @@ public class CompanyController : BaseController
         return Ok(companies.Companies);
     }
 
+    [ResponseCache(CacheProfileName = "Caching")]
     [AllowAnonymous]
     [HttpGet("{id:long}")]
     public async Task<ActionResult<CompanyVm>> Get(long id)

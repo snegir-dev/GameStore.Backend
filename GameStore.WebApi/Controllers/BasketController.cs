@@ -34,6 +34,7 @@ public class BasketController : BaseController
         return Ok(vm.Baskets);
     }
     
+    [ResponseCache(CacheProfileName = "Caching")]
     [HttpGet("{id:long}")]
     public async Task<ActionResult<BasketVm>> Get(long id)
     {
