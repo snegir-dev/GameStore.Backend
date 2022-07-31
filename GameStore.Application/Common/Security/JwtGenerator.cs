@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
-namespace GameStore.Security;
+namespace GameStore.Application.Common.Security;
 
 public class JwtGenerator : IJwtGenerator
 {
