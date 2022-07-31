@@ -8,6 +8,7 @@ using GameStore.Persistence;
 using GameStore.WebApi.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using NLog;
 using NLog.Web;
@@ -55,7 +56,21 @@ try
         });
     });
 
-    builder.Services.AddControllers()
+    builder.Services.AddControllers(options =>
+        {
+            options.CacheProfiles.Add("Caching", 
+                new CacheProfile()
+                {
+                    Duration = 600,
+                    Location = ResponseCacheLocation.Any
+                });
+            options.CacheProfiles.Add("NoCaching", 
+                new CacheProfile()
+                {
+                    Location = ResponseCacheLocation.None,
+                    NoStore = true
+                });
+        })
         .AddNewtonsoftJson(options =>
         {
             options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
@@ -67,6 +82,8 @@ try
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
         options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     });
+    
+    builder.Services.AddResponseCaching();
 
     builder.Logging.ClearProviders();
     builder.Host.UseNLog();
@@ -103,6 +120,8 @@ try
     app.UseHttpsRedirection();
 
     app.UseCors("AllowAll");
+    
+    app.UseResponseCaching();
 
     app.UseAuthentication();
     app.UseAuthorization();

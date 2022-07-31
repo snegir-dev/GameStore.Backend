@@ -21,7 +21,7 @@ public class CompanyController : BaseController
     {
         _mapper = mapper;
     }
-
+    
     [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult> Get()
