@@ -24,7 +24,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\GameStore.Persistence\GameStore.Persistence.csproj" />
-      <ProjectReference Include="..\GameStore.Security\GameStore.Security.csproj" />
     </ItemGroup>
 
     <ItemGroup>

@@ -1,18 +1,13 @@
 using System.Reflection;
-using System.Text.Json.Serialization;
 using GameStore.Application;
 using GameStore.Application.Common.Converters;
 using GameStore.Application.Common.Mappings;
 using GameStore.Application.Interfaces;
 using GameStore.Domain;
 using GameStore.Persistence;
-using GameStore.Security;
 using GameStore.WebApi.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Newtonsoft.Json;
 using NLog;
 using NLog.Web;
@@ -36,9 +31,7 @@ try
     });
 
     builder.Services.AddPersistence(builder.Configuration);
-    builder.Services.AddApplication();
-
-    builder.Services.AddSecurity(builder.Configuration);
+    builder.Services.AddApplication(builder.Configuration);
 
     builder.Services.AddIdentity<User, IdentityRole<long>>(options =>
         {
