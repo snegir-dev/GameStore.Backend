@@ -26,6 +26,9 @@ public class GetUserQueryHandler : IRequestHandler<GetUserQuery, UserVm>
         CancellationToken cancellationToken)
     {
         var user = await _context.Users
+            .Include(u => u.Baskets)
+            .ThenInclude(b => b.Game)
+            .Include(u => u.Games)
             .FirstOrDefaultAsync(u => u.Id == request.Id, cancellationToken);
         if (user == null)
             throw new NotFoundException(nameof(Domain.User), request.Id);
@@ -34,6 +37,13 @@ public class GetUserQueryHandler : IRequestHandler<GetUserQuery, UserVm>
 
         var userDto = _mapper.Map<UserVm>(user);
         userDto.Role = string.Join(", ", roles);
+        
+        userDto.Baskets.ForEach(b => b.User = null!);
+        userDto.Games.ForEach(g =>
+        {
+            g.Baskets = null!;
+            g.Users = null!;
+        });
 
         return userDto;
     }
