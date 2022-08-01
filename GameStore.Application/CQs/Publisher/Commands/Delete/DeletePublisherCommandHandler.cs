@@ -8,10 +8,13 @@ namespace GameStore.Application.CQs.Publisher.Commands.Delete;
 public class DeletePublisherCommandHandler : IRequestHandler<DeletePublisherCommand, Unit>
 {
     private readonly IGameStoreDbContext _context;
+    private readonly ICacheManager<Domain.Publisher> _cacheManager;
 
-    public DeletePublisherCommandHandler(IGameStoreDbContext context)
+    public DeletePublisherCommandHandler(IGameStoreDbContext context, 
+        ICacheManager<Domain.Publisher> cacheManager)
     {
         _context = context;
+        _cacheManager = cacheManager;
     }
 
     public async Task<Unit> Handle(DeletePublisherCommand request, 
@@ -24,6 +27,7 @@ public class DeletePublisherCommandHandler : IRequestHandler<DeletePublisherComm
 
         _context.Publishers.Remove(publisher);
         await _context.SaveChangesAsync(cancellationToken);
+        _cacheManager.RemoveCacheValue(request.Id);
         
         return Unit.Value;
     }

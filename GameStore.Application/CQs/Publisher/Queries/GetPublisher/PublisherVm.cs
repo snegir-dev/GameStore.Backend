@@ -10,6 +10,8 @@ public class PublisherVm : IMapWith<Domain.Publisher>
     public string Name { get; set; }
     public string Description { get; set; }
     public DateOnly DateFoundation { get; set; }
+    
+    public List<Domain.Game> Games { get; set; }
 
     public void Mapping(Profile profile)
     {
@@ -25,6 +27,9 @@ public class PublisherVm : IMapWith<Domain.Publisher>
                     o.MapFrom(p => p.Description))
             .ForMember(p => p.DateFoundation,
                 o =>
-                    o.MapFrom(p => p.DateFoundation));
+                    o.MapFrom(p => p.DateFoundation))
+            .ForMember(p => p.Games,
+                o =>
+                    o.MapFrom(p => p.Games));
     }
 }
