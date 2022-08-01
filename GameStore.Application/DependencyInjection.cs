@@ -2,10 +2,12 @@
 using System.Text;
 using FluentValidation;
 using GameStore.Application.Common.Behaviors;
+using GameStore.Application.Common.Caches;
 using GameStore.Application.Common.Security;
 using GameStore.Application.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -42,6 +44,9 @@ public static class DependencyInjection
             });
         
         services.AddScoped<IJwtGenerator, JwtGenerator>();
+        services.AddSingleton<IMemoryCache, MemoryCache>();
+        services.AddScoped(typeof(ICacheManager<>), 
+            typeof(CacheManager<>));
 
         return services;
     }

@@ -46,6 +46,7 @@ public class UserController : BaseController
         return Ok(vm);
     }
 
+    [ResponseCache(CacheProfileName = "Caching")]
     [Authorize]
     [HttpGet("me")]
     public async Task<ActionResult<UserVm>> GetMe()

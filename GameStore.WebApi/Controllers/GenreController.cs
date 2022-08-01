@@ -21,6 +21,7 @@ public class GenreController : BaseController
         _mapper = mapper;
     }
 
+    [ResponseCache(CacheProfileName = "Caching")]
     [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult> Get()
@@ -31,6 +32,7 @@ public class GenreController : BaseController
         return Ok(vm.Genres);
     }
 
+    [ResponseCache(CacheProfileName = "Caching")]
     [AllowAnonymous]
     [HttpGet("{id:long}")]
     public async Task<ActionResult<GenreVm>> Get(long id)

@@ -2,16 +2,20 @@
 using GameStore.Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace GameStore.Application.CQs.Game.Commands.Delete;
 
 public class DeleteGameCommandHandler : IRequestHandler<DeleteGameCommand, Unit>
 {
     private readonly IGameStoreDbContext _context;
+    private readonly ICacheManager<Domain.Game> _cacheManager;
 
-    public DeleteGameCommandHandler(IGameStoreDbContext context)
+    public DeleteGameCommandHandler(IGameStoreDbContext context, 
+        ICacheManager<Domain.Game> cacheManager)
     {
         _context = context;
+        _cacheManager = cacheManager;
     }
 
     public async Task<Unit> Handle(DeleteGameCommand request, 
@@ -24,6 +28,7 @@ public class DeleteGameCommandHandler : IRequestHandler<DeleteGameCommand, Unit>
 
         _context.Games.Remove(game);
         await _context.SaveChangesAsync(cancellationToken);
+        _cacheManager.RemoveCacheValue(request.Id);
         
         return Unit.Value;
     }

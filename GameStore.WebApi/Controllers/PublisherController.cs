@@ -22,6 +22,7 @@ public class PublisherController : BaseController
         _mapper = mapper;
     }
 
+    [ResponseCache(CacheProfileName = "Caching")]
     [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult> Get()
@@ -32,6 +33,7 @@ public class PublisherController : BaseController
         return Ok(vm.Publishers);
     }
 
+    [ResponseCache(CacheProfileName = "Caching")]
     [AllowAnonymous]
     [HttpGet("{id:long}")]
     public async Task<ActionResult<PublisherVm>> Get(long id)

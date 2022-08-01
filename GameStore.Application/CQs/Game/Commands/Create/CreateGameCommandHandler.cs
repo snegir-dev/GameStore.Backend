@@ -23,20 +23,28 @@ public class CreateGameCommandHandler : IRequestHandler<CreateGameCommand, long>
         var publisher = await _context.Publishers
             .FirstOrDefaultAsync(p => p.Id == request.PublisherId,
                 cancellationToken);
+
+        var notFoundIds = new List<long>();
         var genres = _context.Genres
             .ToList()
             .Select(g =>
             {
-                var nonexistentId = request.GenreIds
-                    .FirstOrDefault(l => l != g.Id);
+                var isFound = request.GenreIds.Any(l => l == g.Id);
+                if (isFound)
+                {
+                    notFoundIds.Add(g.Id);
+                    return g;
+                }
 
-                if (nonexistentId != default)
-                    throw new NotFoundException(nameof(Domain.Genre), nonexistentId);
-
-                return g;
+                return null;
             })
+            .Where(g => g != null)
             .ToList();
 
+        var differenceIds = request.GenreIds.Except(notFoundIds).ToList();
+
+        if (differenceIds.Count > 0)
+            throw new NotFoundException(nameof(Domain.Genre), differenceIds[0]);
         if (company == null)
             throw new NotFoundException(nameof(Company), request.CompanyId);
         if (publisher == null)

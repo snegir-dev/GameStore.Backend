@@ -23,6 +23,7 @@ public class GameController : BaseController
         _mapper = mapper;
     }
     
+    [ResponseCache(CacheProfileName = "Caching")]
     [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<GameDto>>> Get()
@@ -33,6 +34,7 @@ public class GameController : BaseController
         return Ok(vm.Games);
     }
     
+    [ResponseCache(CacheProfileName = "Caching")]
     [AllowAnonymous]
     [HttpGet("{id:long}")]
     public async Task<ActionResult<GameVm>> Get(long id)
