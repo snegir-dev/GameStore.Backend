@@ -20,14 +20,14 @@ public class CacheManager<TEntity> : ICacheManager<TEntity>
         {
             entity = await query();
             if (entity == null)
-                throw new NotFoundException(nameof(TEntity), key);
+                throw new NotFoundException(typeof(TEntity).Name, key);
 
             _cache.Set(key, entity, CacheEntryOptions);
         }
 
         if (entity == null)
             throw new NullReferenceException(
-                $"{nameof(TEntity)} value should not be null");
+                $"{typeof(TEntity).Name} value should not be null");
 
         return entity;
     }

@@ -61,7 +61,7 @@ try
             options.CacheProfiles.Add("Caching", 
                 new CacheProfile()
                 {
-                    Duration = 0,
+                    Duration = 300,
                     Location = ResponseCacheLocation.Any
                 });
             options.CacheProfiles.Add("NoCaching", 
