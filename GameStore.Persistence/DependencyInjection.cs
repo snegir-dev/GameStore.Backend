@@ -1,4 +1,5 @@
 ﻿using GameStore.Application.Interfaces;
+using GameStore.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,8 +16,15 @@ public static class DependencyInjection
         {
             options.UseNpgsql(connectionString);
         });
+        
+        var connectionStringLog = configuration["DbLogConnection"];
+        services.AddDbContext<LogDbContext>(options =>
+        {
+            options.UseNpgsql(connectionStringLog);
+        });
 
         services.AddScoped<IGameStoreDbContext, GameStoreDbContext>();
+        services.AddScoped<LogDbContext>();
 
         return services;
     }

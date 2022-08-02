@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace GameStore.Persistence;
+namespace GameStore.Persistence.Contexts;
 
 public class GameStoreDbContext : IdentityDbContext<User, IdentityRole<long>, long>, 
     IGameStoreDbContext

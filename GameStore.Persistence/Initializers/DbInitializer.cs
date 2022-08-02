@@ -1,4 +1,6 @@
-﻿namespace GameStore.Persistence;
+﻿using GameStore.Persistence.Contexts;
+
+namespace GameStore.Persistence.Initializers;
 
 public class DbInitializer
 {
