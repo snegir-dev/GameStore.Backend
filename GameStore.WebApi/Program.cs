@@ -102,7 +102,9 @@ try
             
             var rolesManager = scope.ServiceProvider
                 .GetRequiredService<RoleManager<IdentityRole<long>>>();
-            await RoleInitializer.InitializerAsync(rolesManager);
+            var userManager = scope.ServiceProvider
+                .GetRequiredService<UserManager<User>>();
+            await RoleInitializer.InitializerAsync(rolesManager, userManager);
             
             var contextLog = serviceProvider.GetRequiredService<LogDbContext>();
             LogDbInitializer.Initializer(contextLog);
