@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace GameStore.Persistence;
+namespace GameStore.Persistence.Initializers;
 
 public class RoleInitializer
 {

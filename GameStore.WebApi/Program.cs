@@ -5,6 +5,8 @@ using GameStore.Application.Common.Mappings;
 using GameStore.Application.Interfaces;
 using GameStore.Domain;
 using GameStore.Persistence;
+using GameStore.Persistence.Contexts;
+using GameStore.Persistence.Initializers;
 using GameStore.WebApi.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -101,6 +103,9 @@ try
             var rolesManager = scope.ServiceProvider
                 .GetRequiredService<RoleManager<IdentityRole<long>>>();
             await RoleInitializer.InitializerAsync(rolesManager);
+            
+            var contextLog = serviceProvider.GetRequiredService<LogDbContext>();
+            LogDbInitializer.Initializer(contextLog);
         }
         catch (Exception e)
         {
