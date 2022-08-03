@@ -43,7 +43,7 @@ public class CustomExceptionHandlerMiddleware
                 break;
             case RecordCreateException createException:
                 statusCode = HttpStatusCode.BadRequest;
-                result = JsonSerializer.Serialize(createException.Errors);
+                result = JsonSerializer.Serialize(createException.Message);
                 break;
             case NotFoundException foundException:
                 statusCode = HttpStatusCode.NotFound;

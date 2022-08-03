@@ -57,7 +57,7 @@ public class RegistrationCommandHandler : IRequestHandler<RegistrationCommand, A
             authenticatedResponse.Token = _jwtGenerator.CreateToken(user);
             return authenticatedResponse;
         }
-   
+
         throw new RecordCreateException(result.Errors.ToList());
     }
 }
