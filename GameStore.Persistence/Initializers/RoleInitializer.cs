@@ -8,14 +8,8 @@ public class RoleInitializer
     public static async Task InitializerAsync(RoleManager<IdentityRole<long>> roleManager, 
         UserManager<User> userManager)
     {
-        var roles = new[] { "Admin" };
-        var defaultUserAdmin = new
-        {
-            UserName = "Admin",
-            Email = "admina2f526a7@gmail.com",
-            Password = "a2f526a7-fb93-43b4-b98d-72ea8e4fe610"
-        };
-
+        var roles = new[] { "Admin", "User" };
+        
         foreach (var role in roles)
         {
             var isExistRole = await roleManager.FindByNameAsync(role) != null;
@@ -23,6 +17,19 @@ public class RoleInitializer
                 await roleManager.CreateAsync(new IdentityRole<long>(role));
         }
 
+        await CreateDefaultAdminUser(roleManager, userManager);
+    }
+
+    private static async Task CreateDefaultAdminUser(RoleManager<IdentityRole<long>> roleManager, 
+        UserManager<User> userManager)
+    {
+        var defaultUserAdmin = new
+        {
+            UserName = "Admin",
+            Email = "admina2f526a7@gmail.com",
+            Password = "a2f526a7-fb93-43b4-b98d-72ea8e4fe610"
+        };
+        
         var userAdmin = await userManager.FindByEmailAsync(defaultUserAdmin.Email);
         if (userAdmin == null)
         {

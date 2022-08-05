@@ -18,14 +18,20 @@ public class SetRoleCommandHandler : IRequestHandler<SetRoleCommand, Unit>
     public async Task<Unit> Handle(SetRoleCommand request,
         CancellationToken cancellationToken)
     {
-        var user = await _userManager.FindByIdAsync(request.UserId.ToString());
-        var role = await _roleManager.FindByIdAsync(request.RoleId.ToString());
+        if (request.CurrentUserId == request.UserId)
+            throw new Exception("You can't change your role");
         
+        var user = await _userManager.FindByIdAsync(request.UserId.ToString());
+
         if (user == null)
             throw new NotFoundException(nameof(Domain.User), request.UserId);
+        
+        var role = await _roleManager.FindByIdAsync(request.RoleId.ToString());
         if (role == null)
             throw new NotFoundException(nameof(IdentityRole<long>), request.UserId);
 
+        var currentRole = await _userManager.GetRolesAsync(user);
+        await _userManager.RemoveFromRolesAsync(user, currentRole);
         var result = await _userManager.AddToRoleAsync(user, role.Name);
 
         if (!result.Succeeded)
