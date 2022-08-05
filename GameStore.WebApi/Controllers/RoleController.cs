@@ -55,6 +55,7 @@ public class RoleController : BaseController
     public async Task<ActionResult> SetRole([FromBody] SetRoleDto role)
     {
         var command = _mapper.Map<SetRoleCommand>(role);
+        command.CurrentUserId = UserId;
         await Mediator.Send(command);
         
         return NoContent();
